@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { auth } from "../../../firebase";
+import AuthFormButton from "../molecules/authFormButton";
 
 type TAuthFormProps = {
   isLoginPage: boolean;
@@ -27,10 +28,11 @@ const AuthForm: React.FC<TAuthFormProps> = ({ isLoginPage }) => {
     try {
       if (isLoginPage) {
         await signInWithEmailAndPassword(auth, data.email, data.password);
+        router.push("/");
       } else {
         await createUserWithEmailAndPassword(auth, data.email, data.password);
+        router.push("/auth/login");
       }
-      router.push("/");
     } catch (error) {
       const errorMessage =
         error.code === "auth/user-not-found"
@@ -76,27 +78,7 @@ const AuthForm: React.FC<TAuthFormProps> = ({ isLoginPage }) => {
         />
         {errors.password && <span className="text-red-600 text-sm">{errors.password.message}</span>}
       </div>
-
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
-        >
-          {isLoginPage ? "ログイン" : "新規登録"}
-        </button>
-      </div>
-
-      <div className="mt-4 grid text-center">
-        <span className="text-gray-600 text-sm">
-          {isLoginPage ? "初めてのご利用の方はこちら" : "既にアカウントをお持ちですか？"}
-        </span>
-        <Link
-          href={isLoginPage ? "/auth/register" : "/auth/login"}
-          className="text-blue-500 text-sm font-bold ml-1 hover:text-blue-700"
-        >
-          {isLoginPage ? "新規登録ページへ" : "ログインページへ"}
-        </Link>
-      </div>
+      <AuthFormButton isLoginPage={isLoginPage} />
     </form>
   );
 };
