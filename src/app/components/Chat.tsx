@@ -1,5 +1,5 @@
 'use client';
-
+import { FaPaperPlane } from 'react-icons/fa';
 import React from 'react';
 
 const Chat = () => {
@@ -14,6 +14,9 @@ const Chat = () => {
           placeholder='Send a Message'
           className='border-2 rounded w-full pr-10 focus:outline-none p-2'
         />
+        <button className='absolute inset-y-0 right-4 flex items-center' onClick={() => sendMessage()}>
+          <FaPaperPlane />
+        </button>
       </div>
     </div>
   );
