@@ -32,7 +32,7 @@ const AuthForm: React.FC<TAuthFormProps> = ({ isLoginPage }) => {
         await createUserWithEmailAndPassword(auth, data.email, data.password);
         router.push('/auth/login');
       }
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage =
         error.code === 'auth/user-not-found'
           ? '対象のユーザーが存在しません。'
