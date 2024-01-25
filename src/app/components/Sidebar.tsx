@@ -1,11 +1,38 @@
 'use client';
 
-import React from 'react';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { BiLogOut } from 'react-icons/bi';
+import { db } from '../../../firebase';
+import { TRoom } from '@/types';
 
 const Sidebar = () => {
-  // FIXME: 一旦仮置き
-  const rooms = ['ルーム 1', 'ルーム 2', 'ルーム 3'];
+  const [rooms, setRooms] = useState<TRoom[]>([]);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      const roomCollectionRef = collection(db, 'rooms');
+      const q = query(
+        roomCollectionRef,
+        where('userId', '==', process.env.NEXT_PUBLIC_TEST_USER_ID),
+        orderBy('createdAt'),
+      );
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const newRooms: TRoom[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          createdAt: doc.data().createdAt,
+        }));
+        setRooms(newRooms);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    };
+
+    fetchRooms();
+  }, []);
 
   return (
     <div className='bg-custom-blue h-full overflow-y-auto px-5 flex flex-col'>
@@ -15,9 +42,9 @@ const Sidebar = () => {
           <h1 className='text-white text-xl font-semibold p-4'>新しいチャット</h1>
         </div>
         <ul className='text-white-400 mt-4'>
-          {rooms.map((room, index) => (
-            <li key={index} className='cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150 '>
-              {room}
+          {rooms.map((room) => (
+            <li key={room.id} className='cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150 '>
+              {room.name}
             </li>
           ))}
         </ul>
