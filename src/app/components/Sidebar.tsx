@@ -5,34 +5,37 @@ import React, { useEffect, useState } from 'react';
 import { BiLogOut } from 'react-icons/bi';
 import { db } from '../../../firebase';
 import { TRoom } from '@/types';
+import { useAppContext } from '@/context/AppContext';
 
 const Sidebar = () => {
+  const { user, userId } = useAppContext();
   const [rooms, setRooms] = useState<TRoom[]>([]);
 
   useEffect(() => {
-    const fetchRooms = async () => {
-      const roomCollectionRef = collection(db, 'rooms');
-      const q = query(
-        roomCollectionRef,
-        where('userId', '==', process.env.NEXT_PUBLIC_TEST_USER_ID),
-        orderBy('createdAt'),
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const newRooms: TRoom[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          name: doc.data().name,
-          createdAt: doc.data().createdAt,
-        }));
-        setRooms(newRooms);
-      });
+    if (user) {
+      const fetchRooms = async () => {
+        const roomCollectionRef = collection(db, 'rooms');
+        const q = query(roomCollectionRef, where('userId', '==', userId), orderBy('createdAt'));
 
-      return () => {
-        unsubscribe();
+        // onSnapshotでリアルタイム更新があるため、unsubscribeでメモリリークを防ぐ
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const newRooms: TRoom[] = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            name: doc.data().name,
+            createdAt: doc.data().createdAt,
+          }));
+
+          setRooms(newRooms);
+        });
+
+        return () => {
+          unsubscribe();
+        };
       };
-    };
 
-    fetchRooms();
-  }, []);
+      fetchRooms();
+    }
+  }, [userId, user]);
 
   return (
     <div className='bg-custom-blue h-full overflow-y-auto px-5 flex flex-col'>
