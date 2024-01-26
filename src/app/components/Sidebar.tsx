@@ -10,6 +10,7 @@ import { useAppContext } from '@/context/AppContext';
 const Sidebar = () => {
   const { user, userId } = useAppContext();
   const [rooms, setRooms] = useState<TRoom[]>([]);
+  const { setSelectedRoom } = useAppContext();
 
   useEffect(() => {
     if (user) {
@@ -37,6 +38,10 @@ const Sidebar = () => {
     }
   }, [userId, user]);
 
+  const selectRoom = (roomId: string) => {
+    setSelectedRoom(roomId);
+  };
+
   return (
     <div className='bg-custom-blue h-full overflow-y-auto px-5 flex flex-col'>
       <div className='flex-grow'>
@@ -46,7 +51,11 @@ const Sidebar = () => {
         </div>
         <ul className='text-white-400 mt-4'>
           {rooms.map((room) => (
-            <li key={room.id} className='cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150 '>
+            <li
+              key={room.id}
+              onClick={() => selectRoom(room.id)}
+              className='cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150 '
+            >
               {room.name}
             </li>
           ))}
