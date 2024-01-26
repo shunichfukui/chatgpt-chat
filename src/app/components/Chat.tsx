@@ -1,20 +1,83 @@
 'use client';
 import { FaPaperPlane } from 'react-icons/fa';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../firebase';
+import { useAppContext } from '@/context/AppContext';
+import { TMessage } from '@/types';
 
 const Chat = () => {
+  const [inputMessage, setInputMessage] = useState<string>('');
+  const [messages, setMessages] = useState<TMessage[]>([]);
+  const { selectedRoom } = useAppContext();
+
+  // 各ルームにおけるメッセージを取得
+  useEffect(() => {
+    if (selectedRoom) {
+      const fetchMessages = async () => {
+        const roomDocRef = doc(db, 'rooms', selectedRoom);
+        const messagesCollectionRef = collection(roomDocRef, 'messages');
+
+        const q = query(messagesCollectionRef, orderBy('createdAt'));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const newMessages = snapshot.docs.map((doc) => doc.data() as TMessage);
+          setMessages(newMessages);
+        });
+
+        return () => {
+          unsubscribe();
+        };
+      };
+
+      fetchMessages();
+    }
+  }, [selectedRoom]);
+
+  const sendMessage = async () => {
+    if (!inputMessage.trim()) return;
+
+    const messageData = {
+      text: inputMessage,
+      sender: 'user',
+      createdAt: serverTimestamp(),
+    };
+
+    //メッセージをFirestoreに保存
+    const roomDocRef = doc(db, 'rooms', selectedRoom!);
+    const messageCollectionRef = collection(roomDocRef, 'messages');
+    await addDoc(messageCollectionRef, messageData);
+
+    setInputMessage('');
+  };
+
   return (
     <div className='bg-blackblue secondary h-full p-4 flex flex-col'>
       <h1 className='text-2xl text-white font-semibold mb-4'>ルームメイ</h1>
-      <div className='text-white-400 flex-grow overflow-y-auto mb-4'>メッセージ達</div>
+      <div className='flex-grow overflow-y-auto mb-4'>
+        {messages.map((message, index) => (
+          <div key={index} className={message.sender === 'user' ? 'text-right' : 'text-left'}>
+            <div
+              className={
+                message.sender === 'user'
+                  ? 'bg-blue-700 inline-block rounded px-4 py-2 mb-2'
+                  : 'bg-green-700 inline-block rounded px-4 py-2 mb-2'
+              }
+            >
+              <p className='text-white'>{message.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className='flex-shrink-0 relative'>
         <input
           type='text'
           placeholder='Send a Message'
+          onChange={(e) => setInputMessage(e.target.value)}
           className='border-2 rounded w-full pr-10 focus:outline-none p-2'
         />
-        <button className='absolute inset-y-0 right-4 flex items-center'>
+        <button className='absolute inset-y-0 right-4 flex items-center' onClick={() => sendMessage()}>
           <FaPaperPlane />
         </button>
       </div>
