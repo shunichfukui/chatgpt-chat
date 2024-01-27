@@ -5,11 +5,17 @@ import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp } 
 import { db } from '../../../firebase';
 import { useAppContext } from '@/context/AppContext';
 import { TMessage } from '@/types';
+import OpenAI from 'openai';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState<string>('');
   const [messages, setMessages] = useState<TMessage[]>([]);
   const { selectedRoom } = useAppContext();
+
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+    dangerouslyAllowBrowser: true,
+  });
 
   // 各ルームにおけるメッセージを取得
   useEffect(() => {
