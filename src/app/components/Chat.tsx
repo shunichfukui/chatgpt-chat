@@ -6,6 +6,7 @@ import { db } from '../../../firebase';
 import { useAppContext } from '@/context/AppContext';
 import { TMessage } from '@/types';
 import OpenAI from 'openai';
+import { GPT_VERSION } from '@/consts';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState<string>('');
@@ -55,6 +56,20 @@ const Chat = () => {
     await addDoc(messageCollectionRef, messageData);
 
     setInputMessage('');
+
+    //OpenAIからの返信
+    const gptResponse = await openai.chat.completions.create({
+      messages: [{ role: 'user', content: inputMessage }],
+      model: GPT_VERSION,
+    });
+
+    const botResponse = gptResponse.choices[0].message.content;
+
+    await addDoc(messageCollectionRef, {
+      text: botResponse,
+      sender: 'bot',
+      createdAt: serverTimestamp(),
+    });
   };
 
   return (
