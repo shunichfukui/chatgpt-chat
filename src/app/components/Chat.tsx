@@ -7,10 +7,12 @@ import { useAppContext } from '@/context/AppContext';
 import { TMessage } from '@/types';
 import OpenAI from 'openai';
 import { GPT_VERSION } from '@/consts';
+import LoadingIcons from 'react-loading-icons';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState<string>('');
   const [messages, setMessages] = useState<TMessage[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { selectedRoom } = useAppContext();
 
   const openai = new OpenAI({
@@ -56,6 +58,7 @@ const Chat = () => {
     await addDoc(messageCollectionRef, messageData);
 
     setInputMessage('');
+    setIsLoading(true);
 
     //OpenAIからの返信
     const gptResponse = await openai.chat.completions.create({
@@ -70,6 +73,8 @@ const Chat = () => {
       sender: 'bot',
       createdAt: serverTimestamp(),
     });
+
+    setIsLoading(false);
   };
 
   return (
@@ -89,6 +94,7 @@ const Chat = () => {
             </div>
           </div>
         ))}
+        {isLoading && <LoadingIcons.TailSpin />}
       </div>
 
       <div className='flex-shrink-0 relative'>
