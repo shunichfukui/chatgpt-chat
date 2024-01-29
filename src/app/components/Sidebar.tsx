@@ -1,6 +1,6 @@
 'use client';
 
-import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { BiLogOut } from 'react-icons/bi';
 import { db } from '../../../firebase';
@@ -16,7 +16,7 @@ const Sidebar = () => {
     if (user) {
       const fetchRooms = async () => {
         const roomCollectionRef = collection(db, 'rooms');
-        const q = query(roomCollectionRef, where('userId', '==', userId), orderBy('createdAt'));
+        const q = query(roomCollectionRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
 
         // onSnapshotでリアルタイム更新があるため、unsubscribeでメモリリークを防ぐ
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -38,14 +38,29 @@ const Sidebar = () => {
     }
   }, [userId, user]);
 
-  const selectRoom = (roomId: string) => {
-    setSelectedRoom(roomId);
+  const selectRoom = (room: TRoom) => {
+    setSelectedRoom(room);
+  };
+
+  const addNewRoom = async () => {
+    const roomName = prompt('ルーム名を入力してください。');
+    if (roomName) {
+      const newRoomRef = collection(db, 'rooms');
+      await addDoc(newRoomRef, {
+        name: roomName,
+        userId: userId,
+        createdAt: serverTimestamp(),
+      });
+    }
   };
 
   return (
     <div className='bg-custom-blue h-full overflow-y-auto px-5 flex flex-col'>
       <div className='flex-grow'>
-        <div className='cursor-pointer flex justify-evenly items-center border mt-2 rounded-md hover:bg-blue-800 duration-150'>
+        <div
+          className='cursor-pointer flex justify-evenly items-center border mt-2 rounded-md hover:bg-blue-800 duration-150'
+          onClick={addNewRoom}
+        >
           <span className='text-white p-4 text-lg'>＋</span>
           <h1 className='text-white text-xl font-semibold p-4'>新しいチャット</h1>
         </div>
@@ -53,7 +68,7 @@ const Sidebar = () => {
           {rooms.map((room) => (
             <li
               key={room.id}
-              onClick={() => selectRoom(room.id)}
+              onClick={() => selectRoom(room)}
               className='cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150 '
             >
               {room.name}

@@ -24,7 +24,7 @@ const Chat = () => {
   useEffect(() => {
     if (selectedRoom) {
       const fetchMessages = async () => {
-        const roomDocRef = doc(db, 'rooms', selectedRoom);
+        const roomDocRef = doc(db, 'rooms', selectedRoom.id);
         const messagesCollectionRef = collection(roomDocRef, 'messages');
 
         const q = query(messagesCollectionRef, orderBy('createdAt'));
@@ -53,7 +53,7 @@ const Chat = () => {
     };
 
     //メッセージをFirestoreに保存
-    const roomDocRef = doc(db, 'rooms', selectedRoom!);
+    const roomDocRef = doc(db, 'rooms', selectedRoom?.id!);
     const messageCollectionRef = collection(roomDocRef, 'messages');
     await addDoc(messageCollectionRef, messageData);
 
@@ -79,7 +79,7 @@ const Chat = () => {
 
   return (
     <div className='bg-blackblue secondary h-full p-4 flex flex-col'>
-      <h1 className='text-2xl text-white font-semibold mb-4'>ルームメイ</h1>
+      {selectedRoom && <h1 className='text-2xl text-white font-semibold mb-4'>{selectedRoom.name}</h1>}
       <div className='flex-grow overflow-y-auto mb-4'>
         {messages.map((message, index) => (
           <div key={index} className={message.sender === 'user' ? 'text-right' : 'text-left'}>
