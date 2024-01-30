@@ -3,7 +3,7 @@
 import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { BiLogOut } from 'react-icons/bi';
-import { db } from '../../../firebase';
+import { auth, db } from '../../../firebase';
 import { TRoom } from '@/types';
 import { useAppContext } from '@/context/AppContext';
 
@@ -42,6 +42,10 @@ const Sidebar = () => {
     setSelectedRoom(room);
   };
 
+  const handleLogout = () => {
+    auth.signOut();
+  };
+
   const addNewRoom = async () => {
     const roomName = prompt('ルーム名を入力してください。');
     if (roomName) {
@@ -77,7 +81,10 @@ const Sidebar = () => {
         </ul>
       </div>
 
-      <div className='text-lg flex items-center justify-evenly mb-2 cursor-pointer p-4 text-slate-100 hover:bg-slate-700 duration-150'>
+      <div
+        className='text-lg flex items-center justify-evenly mb-2 cursor-pointer p-4 text-slate-100 hover:bg-slate-700 duration-150'
+        onClick={() => handleLogout()}
+      >
         <BiLogOut />
         <span>ログアウト</span>
       </div>
