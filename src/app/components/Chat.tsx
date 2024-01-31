@@ -103,6 +103,11 @@ const Chat = () => {
           placeholder='Send a Message'
           onChange={(e) => setInputMessage(e.target.value)}
           className='border-2 rounded w-full pr-10 focus:outline-none p-2'
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              sendMessage();
+            }
+          }}
         />
         <button className='absolute inset-y-0 right-4 flex items-center' onClick={() => sendMessage()}>
           <FaPaperPlane />
