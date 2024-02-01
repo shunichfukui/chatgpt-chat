@@ -66,7 +66,7 @@ const Sidebar = () => {
           onClick={addNewRoom}
         >
           <span className='text-white p-4 text-lg'>＋</span>
-          <h1 className='text-white text-xl font-semibold p-4'>新しいチャット</h1>
+          <h1 className='text-white text-xl font-semibold p-4'>新規でチャットを追加</h1>
         </div>
         <ul className='text-white-400 mt-4'>
           {rooms.map((room) => (
