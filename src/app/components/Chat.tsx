@@ -1,6 +1,6 @@
 'use client';
 import { FaPaperPlane } from 'react-icons/fa';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { useAppContext } from '@/context/AppContext';
@@ -14,6 +14,18 @@ const Chat = () => {
   const [messages, setMessages] = useState<TMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { selectedRoom } = useAppContext();
+
+  const scrollDiv = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollDiv.current) {
+      const element = scrollDiv.current;
+      element.scrollTo({
+        top: element.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [messages]);
 
   const openai = new OpenAI({
     apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
@@ -80,7 +92,7 @@ const Chat = () => {
   return (
     <div className='bg-blackblue secondary h-full p-4 flex flex-col'>
       {selectedRoom && <h1 className='text-2xl text-white font-semibold mb-4'>{selectedRoom.name}</h1>}
-      <div className='flex-grow overflow-y-auto mb-4'>
+      <div className='flex-grow overflow-y-auto mb-4' ref={scrollDiv}>
         {messages.map((message, index) => (
           <div key={index} className={message.sender === 'user' ? 'text-right' : 'text-left'}>
             <div
