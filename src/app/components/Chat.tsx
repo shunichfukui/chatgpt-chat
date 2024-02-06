@@ -17,6 +17,7 @@ const Chat = () => {
 
   const scrollDiv = useRef<HTMLDivElement>(null);
 
+  // メッセージが送信された際に下にスクロールする
   useEffect(() => {
     if (scrollDiv.current) {
       const element = scrollDiv.current;
