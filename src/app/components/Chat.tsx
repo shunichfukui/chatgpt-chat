@@ -59,6 +59,12 @@ const Chat = () => {
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
 
+    setIsLoading(true);
+
+    if (isLoading) {
+      return;
+    }
+
     const messageData = {
       text: inputMessage,
       sender: 'user',
@@ -71,23 +77,26 @@ const Chat = () => {
     await addDoc(messageCollectionRef, messageData);
 
     setInputMessage('');
-    setIsLoading(true);
 
-    //OpenAIからの返信
-    const gptResponse = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: inputMessage }],
-      model: GPT_VERSION,
-    });
+    try {
+      //OpenAIからの返信
+      const gptResponse = await openai.chat.completions.create({
+        messages: [{ role: 'user', content: inputMessage }],
+        model: GPT_VERSION,
+      });
 
-    const botResponse = gptResponse.choices[0].message.content;
+      const botResponse = gptResponse.choices[0].message.content;
 
-    await addDoc(messageCollectionRef, {
-      text: botResponse,
-      sender: 'bot',
-      createdAt: serverTimestamp(),
-    });
-
-    setIsLoading(false);
+      await addDoc(messageCollectionRef, {
+        text: botResponse,
+        sender: 'bot',
+        createdAt: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error('Error sending message to OpenAI:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
