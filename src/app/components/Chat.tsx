@@ -115,6 +115,7 @@ const Chat = () => {
           type='text'
           placeholder='Send a Message'
           onChange={(e) => setInputMessage(e.target.value)}
+          value={inputMessage}
           className='border-2 rounded w-full pr-10 focus:outline-none p-2'
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
