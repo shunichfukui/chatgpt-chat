@@ -120,12 +120,11 @@ const Chat = () => {
       </div>
 
       <div className='flex-shrink-0 relative'>
-        <input
-          type='text'
+        <textarea
           placeholder='Send a Message'
           onChange={(e) => setInputMessage(e.target.value)}
           value={inputMessage}
-          className='border-2 rounded w-full pr-10 focus:outline-none p-2'
+          className='border-2 rounded w-full pr-10 focus:outline-none p-2 h-11'
         />
         <button className='absolute inset-y-0 right-4 flex items-center' onClick={() => sendMessage()}>
           <FaPaperPlane />
