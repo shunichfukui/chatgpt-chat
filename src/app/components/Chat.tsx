@@ -12,8 +12,7 @@ import LoadingIcons from 'react-loading-icons';
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState<string>('');
   const [messages, setMessages] = useState<TMessage[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { selectedRoom } = useAppContext();
+  const { selectedRoom, isLoading, setIsLoading } = useAppContext();
 
   const scrollDiv = useRef<HTMLDivElement>(null);
 
