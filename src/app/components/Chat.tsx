@@ -12,8 +12,7 @@ import LoadingIcons from 'react-loading-icons';
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState<string>('');
   const [messages, setMessages] = useState<TMessage[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { selectedRoom } = useAppContext();
+  const { selectedRoom, isLoading, setIsLoading } = useAppContext();
 
   const scrollDiv = useRef<HTMLDivElement>(null);
 
@@ -125,6 +124,11 @@ const Chat = () => {
           onChange={(e) => setInputMessage(e.target.value)}
           value={inputMessage}
           className='border-2 rounded w-full pr-10 focus:outline-none p-2 h-11'
+          onKeyDown={(e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+              sendMessage();
+            }
+          }}
         />
         <button className='absolute inset-y-0 right-4 flex items-center' onClick={() => sendMessage()}>
           <FaPaperPlane />

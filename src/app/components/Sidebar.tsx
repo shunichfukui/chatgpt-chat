@@ -10,7 +10,7 @@ import { useAppContext } from '@/context/AppContext';
 const Sidebar = () => {
   const { user, userId } = useAppContext();
   const [rooms, setRooms] = useState<TRoom[]>([]);
-  const { setSelectedRoom } = useAppContext();
+  const { setSelectedRoom, isLoading } = useAppContext();
 
   useEffect(() => {
     if (user) {
@@ -39,6 +39,9 @@ const Sidebar = () => {
   }, [userId, user]);
 
   const selectRoom = (room: TRoom) => {
+    // メッセージのローディング中は他のチャットルームを選択できないようにする
+    if (isLoading) return;
+
     setSelectedRoom(room);
   };
 

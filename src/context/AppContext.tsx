@@ -16,6 +16,8 @@ type AppContextType = {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   selectedRoom: TRoom | null;
   setSelectedRoom: React.Dispatch<React.SetStateAction<TRoom | null>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const defalutContextData = {
@@ -24,6 +26,8 @@ const defalutContextData = {
   setUser: () => {},
   selectedRoom: null,
   setSelectedRoom: () => {},
+  isLoading: false,
+  setIsLoading: () => {},
 };
 
 const AppContext = createContext<AppContextType>(defalutContextData);
@@ -32,6 +36,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<TRoom | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,6 +63,8 @@ export function AppProvider({ children }: AppProviderProps) {
         setUser,
         selectedRoom,
         setSelectedRoom,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}
