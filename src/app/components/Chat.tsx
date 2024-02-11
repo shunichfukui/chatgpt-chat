@@ -8,12 +8,11 @@ import { TMessage } from '@/types';
 import OpenAI from 'openai';
 import { GPT_VERSION } from '@/consts';
 import LoadingIcons from 'react-loading-icons';
-import useRoomNameFilter from '@/hooks/useFormSubmit copy';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState<string>('');
   const [messages, setMessages] = useState<TMessage[]>([]);
-  const { userId, selectedRoom, setSelectedRoom, isLoading, setIsLoading } = useAppContext();
+  const { selectedRoom, isLoading, setIsLoading } = useAppContext();
 
   const scrollDiv = useRef<HTMLDivElement>(null);
 
@@ -61,25 +60,6 @@ const Chat = () => {
 
     setIsLoading(true);
 
-    // selectedRoomが存在しない場合、新しいルームを作成
-    let roomDocRef;
-
-    if (!selectedRoom) {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const roomName = useRoomNameFilter(inputMessage);
-      const newRoomRef = await addDoc(collection(db, 'rooms'), {
-        name: roomName,
-        userId: userId,
-        createdAt: serverTimestamp(),
-      });
-      roomDocRef = doc(db, 'rooms', newRoomRef.id);
-      console.log(roomDocRef, 'roomDocRef');
-
-      // 新しいルームをselectedRoomに設定
-      setSelectedRoom({ id: newRoomRef.id, name: roomName, createdAt: new Date() });
-    } else {
-      roomDocRef = doc(db, 'rooms', selectedRoom.id);
-    }
     if (isLoading) {
       return;
     }
@@ -91,6 +71,7 @@ const Chat = () => {
     };
 
     //メッセージをFirestoreに保存
+    const roomDocRef = doc(db, 'rooms', selectedRoom?.id!);
     const messageCollectionRef = collection(roomDocRef, 'messages');
     await addDoc(messageCollectionRef, messageData);
 
