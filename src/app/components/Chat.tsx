@@ -8,6 +8,7 @@ import { TMessage } from '@/types';
 import OpenAI from 'openai';
 import { GPT_VERSION } from '@/consts';
 import LoadingIcons from 'react-loading-icons';
+import useRoomNameFilter from '@/hooks/useRoomNameFilter';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState<string>('');
