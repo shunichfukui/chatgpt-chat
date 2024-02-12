@@ -10,3 +10,5 @@ next: 14.1.0
 
 tailwind css
 firebase
+
+url: https://chatgpt-chat-4ac42.web.app
