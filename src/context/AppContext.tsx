@@ -46,7 +46,7 @@ export function AppProvider({ children }: AppProviderProps) {
       setUserId(newUser ? newUser.uid : null);
 
       if (!newUser) {
-        router.push('/auth/login');
+        router.push('/auth/register');
       }
     });
 

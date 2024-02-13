@@ -30,7 +30,7 @@ const AuthForm: React.FC<TAuthFormProps> = ({ isLoginPage }) => {
         router.push('/');
       } else {
         await createUserWithEmailAndPassword(auth, data.email, data.password);
-        router.push('/auth/login');
+        router.push('/auth/register');
       }
     } catch (error: any) {
       const errorMessage =
