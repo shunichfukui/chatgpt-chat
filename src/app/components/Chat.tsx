@@ -119,7 +119,6 @@ const Chat = () => {
 
   return (
     <div className='bg-blackblue secondary h-full p-4 flex flex-col'>
-      {selectedRoom && <h1 className='text-2xl text-white font-semibold mb-4'>{selectedRoom.name}</h1>}
       <div className='flex-grow overflow-y-auto mb-4' ref={scrollDiv}>
         {messages.map((message, index) => (
           <div key={index} className={message.sender === 'user' ? 'text-right' : 'text-left'}>

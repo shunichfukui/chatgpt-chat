@@ -25,7 +25,7 @@ export default function Home() {
             isSidebarOpen ? 'block bg-blackblue w-full' : 'hidden'
           } bg-custom-blue w-64 h-full absolute md:relative md:flex z-10`}
         >
-          <Sidebar />
+          <Sidebar setIsSidebarOpen={setIsSidebarOpen} />
         </div>
 
         {/* チャット画面 */}

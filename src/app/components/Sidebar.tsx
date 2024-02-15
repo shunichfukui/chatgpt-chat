@@ -1,16 +1,21 @@
 'use client';
 
 import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { BiLogOut } from 'react-icons/bi';
 import { auth, db } from '../../../firebase';
 import { TRoom } from '@/types';
 import { useAppContext } from '@/context/AppContext';
+import { AiOutlineClose } from 'react-icons/ai';
 
-const Sidebar = () => {
+type TSidebarProps = {
+  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+const Sidebar: React.FC<TSidebarProps> = ({ setIsSidebarOpen }) => {
   const { user, userId } = useAppContext();
   const [rooms, setRooms] = useState<TRoom[]>([]);
-  const { setSelectedRoom, isLoading } = useAppContext();
+  const { setSelectedRoom, isLoading, selectedRoom } = useAppContext();
 
   useEffect(() => {
     if (user) {
@@ -42,6 +47,7 @@ const Sidebar = () => {
     // メッセージのローディング中は他のチャットルームを選択できないようにする
     if (isLoading) return;
 
+    setIsSidebarOpen(false);
     setSelectedRoom(room);
   };
 
@@ -64,12 +70,19 @@ const Sidebar = () => {
   return (
     <div className='bg-custom-blue h-full overflow-y-auto px-5 flex flex-col'>
       <div className='flex-grow'>
-        <div
-          className='cursor-pointer flex justify-evenly items-center border mt-2 rounded-md hover:bg-blue-800 duration-150'
-          onClick={addNewRoom}
-        >
-          <span className='text-white p-4 text-lg'>＋</span>
-          <h1 className='text-white text-xl font-semibold p-4'>新規チャット</h1>
+        <div className='flex justify-between items-center'>
+          <div
+            className='cursor-pointer flex justify-center items-center border mt-2 rounded-md hover:bg-blue-800 duration-150'
+            onClick={addNewRoom}
+          >
+            <span className='text-white p-4 text-lg'>＋ 新規チャット</span>
+          </div>
+          <button
+            onClick={() => setIsSidebarOpen(false)} // バツボタンを押した時にサイドバーを閉じる
+            className='text-white text-2xl p-2 hover:bg-red-500 rounded-md' // Tailwind CSSでスタイリング
+          >
+            <AiOutlineClose />
+          </button>
         </div>
         <ul className='text-white-400 mt-4'>
           {rooms.map((room) => (
