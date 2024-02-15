@@ -10,7 +10,7 @@ import { useAppContext } from '@/context/AppContext';
 const Sidebar = () => {
   const { user, userId } = useAppContext();
   const [rooms, setRooms] = useState<TRoom[]>([]);
-  const { setSelectedRoom, isLoading } = useAppContext();
+  const { setSelectedRoom, isLoading, selectedRoom } = useAppContext();
 
   useEffect(() => {
     if (user) {
@@ -76,7 +76,9 @@ const Sidebar = () => {
             <li
               key={room.id}
               onClick={() => selectRoom(room)}
-              className='cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150 '
+              className={`cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150 ${
+                selectedRoom && selectedRoom.id === room.id ? 'bg-blackgray' : ''
+              }`}
             >
               {room.name}
             </li>

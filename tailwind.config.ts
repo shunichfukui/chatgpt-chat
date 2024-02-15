@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       backgroundColor: {
         blackblue: '#000011',
+        blackgray: '#696969',
       },
       textColor: {
         'white-400': '#94a3b8',
