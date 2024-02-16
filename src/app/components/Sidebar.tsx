@@ -70,16 +70,17 @@ const Sidebar: React.FC<TSidebarProps> = ({ setIsSidebarOpen }) => {
   return (
     <div className='bg-custom-blue h-full overflow-y-auto px-5 flex flex-col'>
       <div className='flex-grow'>
-        <div className='flex justify-between items-center'>
+        <div className='flex justify-between items-center w-full'>
           <div
-            className='cursor-pointer flex justify-center items-center border mt-2 rounded-md hover:bg-blue-800 duration-150'
+            className='cursor-pointer w-full flex justify-center items-center border mt-2 rounded-md hover:bg-blue-800 duration-150'
             onClick={addNewRoom}
           >
             <span className='text-white p-4 text-lg'>＋ 新規チャット</span>
           </div>
+          {/* PC サイズの場合は非表示にする */}
           <button
             onClick={() => setIsSidebarOpen(false)} // バツボタンを押した時にサイドバーを閉じる
-            className='text-white text-2xl p-2 hover:bg-red-500 rounded-md' // Tailwind CSSでスタイリング
+            className='text-white text-2xl p-2 hover:bg-red-500 rounded-md sm:hidden'
           >
             <AiOutlineClose />
           </button>
