@@ -1,6 +1,14 @@
 'use client';
 
-import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  where,
+} from 'firebase/firestore';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { BiLogOut } from 'react-icons/bi';
 import { auth, db } from '../../../firebase';
@@ -21,7 +29,11 @@ const Sidebar: React.FC<TSidebarProps> = ({ setIsSidebarOpen }) => {
     if (user) {
       const fetchRooms = async () => {
         const roomCollectionRef = collection(db, 'rooms');
-        const q = query(roomCollectionRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
+        const q = query(
+          roomCollectionRef,
+          where('userId', '==', userId),
+          orderBy('createdAt', 'desc')
+        );
 
         // onSnapshotでリアルタイム更新があるため、unsubscribeでメモリリークを防ぐ
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -68,24 +80,24 @@ const Sidebar: React.FC<TSidebarProps> = ({ setIsSidebarOpen }) => {
   };
 
   return (
-    <div className='bg-custom-blue h-full overflow-y-auto px-5 flex flex-col'>
-      <div className='flex-grow'>
-        <div className='flex justify-between items-center w-full'>
+    <div className="bg-custom-blue h-full overflow-y-auto px-5 flex flex-col">
+      <div className="flex-grow">
+        <div className="flex justify-between items-center w-full">
           <div
-            className='cursor-pointer w-full flex justify-center items-center border mt-2 rounded-md hover:bg-blue-800 duration-150'
+            className="cursor-pointer w-full flex justify-center items-center border mt-2 rounded-md hover:bg-blue-800 duration-150"
             onClick={addNewRoom}
           >
-            <span className='text-white p-4 text-lg'>＋ 新規チャット</span>
+            <span className="text-white p-4 text-lg">＋ 新規チャット</span>
           </div>
           {/* PC サイズの場合は非表示にする */}
           <button
             onClick={() => setIsSidebarOpen(false)} // バツボタンを押した時にサイドバーを閉じる
-            className='text-white text-2xl p-2 hover:bg-red-500 rounded-md sm:hidden'
+            className="text-white text-2xl p-2 hover:bg-red-500 rounded-md sm:hidden"
           >
             <AiOutlineClose />
           </button>
         </div>
-        <ul className='text-white-400 mt-4'>
+        <ul className="text-white-400 mt-4">
           {rooms.map((room) => (
             <li
               key={room.id}
@@ -100,9 +112,9 @@ const Sidebar: React.FC<TSidebarProps> = ({ setIsSidebarOpen }) => {
         </ul>
       </div>
 
-      {user && <div className='mb-2 p-4 text-slate-100 text-lg font-medium'>{user.email}</div>}
+      {user && <div className="mb-2 p-4 text-slate-100 text-lg font-medium">{user.email}</div>}
       <div
-        className='text-lg flex items-center justify-evenly mb-2 cursor-pointer p-4 text-slate-100 hover:bg-slate-700 duration-150'
+        className="text-lg flex items-center justify-evenly mb-2 cursor-pointer p-4 text-slate-100 hover:bg-slate-700 duration-150"
         onClick={() => handleLogout()}
       >
         <BiLogOut />

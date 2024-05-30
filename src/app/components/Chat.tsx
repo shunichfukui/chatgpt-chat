@@ -1,7 +1,15 @@
 'use client';
 import { FaPaperPlane } from 'react-icons/fa';
 import React, { useEffect, useRef, useState } from 'react';
-import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { useAppContext } from '@/context/AppContext';
 import { TMessage } from '@/types';
@@ -118,8 +126,8 @@ const Chat = () => {
   };
 
   return (
-    <div className='bg-blackblue secondary h-full p-4 flex flex-col'>
-      <div className='flex-grow overflow-y-auto mb-4' ref={scrollDiv}>
+    <div className="bg-blackblue secondary h-full p-4 flex flex-col">
+      <div className="flex-grow overflow-y-auto mb-4" ref={scrollDiv}>
         {messages.map((message, index) => (
           <div key={index} className={message.sender === 'user' ? 'text-right' : 'text-left'}>
             <div
@@ -129,26 +137,29 @@ const Chat = () => {
                   : 'bg-green-700 inline-block rounded px-4 py-2 mb-2'
               }
             >
-              <p className='text-white'>{message.text}</p>
+              <p className="text-white">{message.text}</p>
             </div>
           </div>
         ))}
         {isLoading && <LoadingIcons.TailSpin />}
       </div>
 
-      <div className='flex-shrink-0 relative'>
+      <div className="flex-shrink-0 relative">
         <textarea
-          placeholder='Send a Message'
+          placeholder="Send a Message"
           onChange={(e) => setInputMessage(e.target.value)}
           value={inputMessage}
-          className='border-2 rounded w-full pr-10 focus:outline-none p-2 h-11'
+          className="border-2 rounded w-full pr-10 focus:outline-none p-2 h-11"
           onKeyDown={(e) => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
               sendMessage();
             }
           }}
         />
-        <button className='absolute inset-y-0 right-4 flex items-center' onClick={() => sendMessage()}>
+        <button
+          className="absolute inset-y-0 right-4 flex items-center"
+          onClick={() => sendMessage()}
+        >
           <FaPaperPlane />
         </button>
       </div>

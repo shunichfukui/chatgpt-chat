@@ -9,11 +9,11 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className='flex h-screen'>
-      <div className='relative md:flex' style={{ width: '100%' }}>
+    <div className="flex h-screen">
+      <div className="relative md:flex" style={{ width: '100%' }}>
         {/* ハンバーガーメニューアイコン */}
         <button
-          className='text-4xl text-white absolute left-4 top-4 md:hidden'
+          className="text-4xl text-white absolute left-4 top-4 md:hidden"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
           <FaBars />
@@ -29,7 +29,7 @@ export default function Home() {
         </div>
 
         {/* チャット画面 */}
-        <div className='flex-grow md:relative z-0 h-full'>
+        <div className="flex-grow md:relative z-0 h-full">
           <Chat />
         </div>
       </div>

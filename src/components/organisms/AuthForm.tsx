@@ -44,11 +44,11 @@ const AuthForm: React.FC<TAuthFormProps> = ({ isLoginPage }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='bg-white p-8 rounded-lg shadow-md w-96'>
+    <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-8 rounded-lg shadow-md w-96">
       <Header title={isLoginPage ? 'ログイン' : '新規登録'} />
 
-      <div className='mb-4'>
-        <label className='block text-sm font-medium text-gray-600'>メールアドレス</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600">メールアドレス</label>
         <input
           {...register('email', {
             required: 'メールアドレスは必須です。',
@@ -57,15 +57,15 @@ const AuthForm: React.FC<TAuthFormProps> = ({ isLoginPage }) => {
               message: '不適切なメールアドレスです。',
             },
           })}
-          type='text'
-          className='mt-1 border-2 rounded-md w-full p-2'
+          type="text"
+          className="mt-1 border-2 rounded-md w-full p-2"
         />
-        {errors.email && <span className='text-red-600 text-sm'>{errors.email.message}</span>}
+        {errors.email && <span className="text-red-600 text-sm">{errors.email.message}</span>}
       </div>
-      <div className='mb-4'>
-        <label className='block text-sm font-medium text-gray-600'>パスワード</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600">パスワード</label>
         <input
-          type='password'
+          type="password"
           {...register('password', {
             required: 'パスワードは必須です。',
             minLength: {
@@ -73,9 +73,9 @@ const AuthForm: React.FC<TAuthFormProps> = ({ isLoginPage }) => {
               message: '6文字以上入力してください。',
             },
           })}
-          className='mt-1 border-2 rounded-md w-full p-2'
+          className="mt-1 border-2 rounded-md w-full p-2"
         />
-        {errors.password && <span className='text-red-600 text-sm'>{errors.password.message}</span>}
+        {errors.password && <span className="text-red-600 text-sm">{errors.password.message}</span>}
       </div>
       <AuthFormButton isLoginPage={isLoginPage} />
     </form>

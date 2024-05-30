@@ -20,7 +20,7 @@ type AppContextType = {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const defalutContextData = {
+const defaultContextData = {
   user: null,
   userId: null,
   setUser: () => {},
@@ -30,7 +30,7 @@ const defalutContextData = {
   setIsLoading: () => {},
 };
 
-const AppContext = createContext<AppContextType>(defalutContextData);
+const AppContext = createContext<AppContextType>(defaultContextData);
 
 export function AppProvider({ children }: AppProviderProps) {
   const [user, setUser] = useState<User | null>(null);

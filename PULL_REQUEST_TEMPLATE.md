@@ -1,4 +1,4 @@
-issue: 
+issue:
 
 概要
 
